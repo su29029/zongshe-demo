@@ -12,9 +12,7 @@ import (
 func NewHTTPServer(ctx context.Context, endpoints endpoint.Endpoints) http.Handler {
 	r := mux.NewRouter()
 	r.Use(authMiddleWare)
-	r.Methods("GET").Path("/").Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request){
-		_, _ = w.Write([]byte{97, 98, 99, 100}) // abcd for test
-	}))
+
 	s := r.PathPrefix("/user").Subrouter()
 
 	s.Methods("POST").Path("/login").Handler(httptransport.NewServer(

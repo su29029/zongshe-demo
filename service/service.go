@@ -65,16 +65,15 @@ func (u userService)UpdateUser(req model.UpdateRequest) (model.UpdateResponse, e
 	if err != nil {
 		return rsp, errors.InternalServerError("user.UpdateUser:fatal:001", err.Error())
 	}
+
 	if currentUser.User == nil {
 		return rsp, errors.Forbidden("user:001", "user not existed")
 	}
-	fmt.Println("req.User: ", req.User)
-	fmt.Println("currentUser: ", currentUser.User)
-	// not existed field, set it to the currentUser.User's field, existed field, don't replace it.
+
 	if err := util.CopyStruct(req.User, currentUser.User); err != nil {
 		return rsp, err
 	}
-	fmt.Println("after, req.User: ",req.User)
+
 	_, err = db.GetUserDB().Exec("update user_profile_table set username = ?, password = ?, tel = ?, " +
 		"age = ?, sex = ?, email = ?, address = ?, class_num = ?, img = ? where uid = ? ",
 		req.User.Username, req.User.Password,
